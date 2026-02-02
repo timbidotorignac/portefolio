@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sensibilisation à l’E-réputation</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    // Thème au chargement (mémoire + préférence système)
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'night' : 'day');
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="binary-wall" aria-hidden="true">
+    <div class="binary-line">0010011101100101101001100101010010100100101101100101101001100</div>
+    <div class="binary-line">111110011100010110010111100111000101100101111001110001011001</div>
+    <div class="binary-line">000110010111010100110101000011001011101010011010100001100101</div>
+    <div class="binary-line">111110001100000111000111111000110000011100011111100011000001</div>
+    <div class="binary-line">000000011111101111000000001111110111100000000111111011110000</div>
+  </div>
+
+  <header>
+    <h1 class="code-title"><span class="bracket">&lt;</span>Sensibilisation à l’E-réputation<span class="bracket">/&gt;</span></h1>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Basculer le thème">
+      <span class="icon-sun" aria-hidden="true">☀️</span>
+      <span class="icon-moon" aria-hidden="true">🌙</span>
+    </button>
+  </header>
+
+  
+<main class="container">
+  <section class="intro">
+    <h2>Objectif</h2>
+    <p>Concevoir et animer une action de sensibilisation à l’e-réputation destinée à des collégiens.</p>
+  </section>
+  <section class="sae-part">
+    <h3>Étapes</h3>
+    <ul>
+      <li>Recherche documentaire et veille</li>
+      <li>Conception de l’intervention (quiz, supports)</li>
+      <li>Simulation d’animation</li>
+    </ul>
+    <div class="img-block">
+      <img src="a.jpg" alt="Illustration e-réputation" />
+      <p class="caption">Illustration symbolique</p>
+    </div>
+  </section>
+  <section class="sae-part">
+    <h3>Documents</h3>
+    <ul>
+      <li><a class="pdf-link" href="SAÉ14_Présentation-générale_2024-2025.pdf" target="_blank">📎 Présentation générale</a></li>
+      <li><a class="pdf-link" href="Sondage_ifop_-_comportements_digitaux_des_enfants_-_fevrier_2020 (1).pdf" target="_blank">📊 Sondage IFOP</a></li>
+    </ul>
+  </section>
+  <section class="competences">
+    <h3>Compétences</h3>
+    <ul>
+      <li>Pédagogie, vulgarisation</li>
+      <li>Outils interactifs</li>
+      <li>Communication</li>
+    </ul>
+  </section>
+</main>
+
+
+  <footer class="page-footer">
+    <a href="../index.html" class="footer-left-button">← Retour aux Projets</a>
+    <a href="../../index.html" class="footer-right-button">🏠 Accueil</a>
+  </footer>
+
+  <script>
+    // Bascule thème + sauvegarde
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.dataset.theme === 'night' ? 'day' : 'night';
+      document.documentElement.dataset.theme = cur;
+      localStorage.setItem('theme', cur);
+    });
+  </script>
+</body>
+</html>
