@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projets personnels — Tim Bidot‑Orignac</title>
+  <link rel="stylesheet" href="../projetscolaire/style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'night' : 'day');
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="binary-wall" aria-hidden="true">
+    <div class="binary-line">0010011101100101101001100101010010100100101101100101101001100</div>
+    <div class="binary-line">111110011100010110010111100111000101100101111001110001011001</div>
+    <div class="binary-line">000110010111010100110101000011001011101010011010100001100101</div>
+    <div class="binary-line">111110001100000111000111111000110000011100011111100011000001</div>
+    <div class="binary-line">000000011111101111000000001111110111100000000111111011110000</div>
+  </div>
+
+  <header class="page-header">
+    <div class="header-left">
+      <h1 class="code-title"><span class="bracket">&lt;</span>PROJETS_PERSONNELS<span class="bracket">/&gt;</span></h1>
+      <p class="subtitle">Scripts défensifs, notes de labs et mini‑outils — cybersécurité (cadre autorisé)</p>
+    </div>
+
+    <button id="theme-toggle" class="theme-toggle" aria-label="Basculer le thème">
+      <span class="icon-sun" aria-hidden="true">☀️</span>
+      <span class="icon-moon" aria-hidden="true">🌙</span>
+    </button>
+  </header>
+
+  <main class="wrapper">
+    <section class="intro">
+      <h2>Objectif</h2>
+      <p>
+        Cette page regroupe des <strong>mini‑projets personnels</strong> (scripts et notes) orientés
+        <strong>cybersécurité</strong> et <strong>bonnes pratiques</strong>, réalisés dans un cadre <strong>autorisé</strong>
+        (formation / lab). Je ne publie pas de payloads ni de code d’exploitation : le but est de montrer une démarche,
+        des outils, et des contre‑mesures.
+      </p>
+    </section>
+
+    <section class="controls" aria-label="Filtres et tri">
+      <div class="control-block">
+        <div class="control-label">Domaine</div>
+        <div class="filter-buttons" role="group" aria-label="Filtrer par domaine">
+          <button class="filter-btn active" data-domain="all" type="button">Tous</button>
+          <button class="filter-btn" data-domain="Cybersécurité" type="button">Cybersécurité</button>
+          <button class="filter-btn" data-domain="Réseaux" type="button">Réseaux</button>
+          <button class="filter-btn" data-domain="Télécommunications" type="button">Télécommunications</button>
+          <button class="filter-btn" data-domain="Développement & données" type="button">Dév &amp; data</button>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <div class="control-block">
+          <label class="control-label" for="typeSelect">Type</label>
+          <select id="typeSelect" class="control-input">
+            <option value="all">Tous</option>
+            <option value="Script / outil">Script / outil</option>
+            <option value="Notes / write‑up">Notes / write‑up</option>
+            <option value="Lab">Lab</option>
+          </select>
+        </div>
+
+        <div class="control-block">
+          <label class="control-label" for="sortSelect">Tri</label>
+          <select id="sortSelect" class="control-input">
+            <option value="featured">Recommandé</option>
+            <option value="az">Nom (A → Z)</option>
+            <option value="domain">Domaine</option>
+            <option value="type">Type</option>
+          </select>
+        </div>
+
+        <div class="control-block control-search">
+          <label class="control-label" for="searchInput">Recherche</label>
+          <input id="searchInput" class="control-input" type="search" placeholder="ex : SQL, headers, logs, Burp…" />
+        </div>
+      </div>
+    </section>
+
+    <p class="results" id="resultsCount" aria-live="polite"></p>
+    <section class="grid" id="projectsGrid" aria-label="Liste des projets"></section>
+  </main>
+
+  <footer class="page-footer">
+    <a href="../index.html" class="footer-left-button">↩ Retour au Portfolio</a>
+    <a href="../projetscolaire/index.html" class="footer-right-button">📂 Projets universitaires</a>
+  </footer>
+
+  <script>
+    // Thème
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.dataset.theme === 'night' ? 'day' : 'night';
+      document.documentElement.dataset.theme = cur;
+      localStorage.setItem('theme', cur);
+    });
+
+    const projects = [
+      {
+        id: "sqli-prevention",
+        featured: 1,
+        type: "Script / outil",
+        domain: "Cybersécurité",
+        title: "Prévention SQL injection — requêtes paramétrées & tests",
+        cover: "../photo/a.png",
+        description: "Exemples concrets de requêtes paramétrées (Python), validation d’entrées et cas de tests pour réduire le risque SQLi.",
+        tags: ["SQL", "Paramétrage", "OWASP", "Bonnes pratiques"],
+        details: [
+          "Exemples avec paramètres (placeholders) — pas de concaténation de chaînes",
+          "Rappels sur l’escaping et les limites des blacklists",
+          "Mini‑tests unitaires (cas attendus / cas invalides)"
+        ],
+        snippet: `# sql_prevention_examples.py
+# Démo : requêtes paramétrées (prévention SQLi)
+
+import sqlite3
+
+conn = sqlite3.connect('demo.db')
+cur = conn.cursor()
+
+username = 'alice'
+# ✅ Paramétré : le moteur gère l’échappement
+cur.execute('SELECT id FROM users WHERE username = ?', (username,))
+print(cur.fetchone())
+`,
+        links: [
+          { label: "Script", href: "scripts/sql_prevention_examples.py" }
+        ]
+      },
+      {
+        id: "headers-audit",
+        featured: 1,
+        type: "Script / outil",
+        domain: "Cybersécurité",
+        title: "Audit d’entêtes HTTP — checklist sécurité (CSP, HSTS, etc.)",
+        cover: "../images/shield.svg",
+        description: "Petit outil d’inventaire des entêtes de sécurité sur une liste d’URL (usage : environnements de test / sites dont vous avez l’autorisation).",
+        tags: ["HTTP", "Headers", "CSP", "HSTS"],
+        details: [
+          "Vérifie la présence de headers clés (HSTS, CSP, X-Frame-Options…)",
+          "Sortie lisible + résumé des manquants",
+          "Base pour une checklist de durcissement"
+        ],
+        snippet: `# http_headers_audit.py
+# Audit simple d’entêtes HTTP de sécurité
+
+from urllib.request import Request, urlopen
+
+SEC_HEADERS = [
+    'strict-transport-security',
+    'content-security-policy',
+    'x-frame-options',
+    'x-content-type-options',
+    'referrer-policy'
+]
+
+req = Request('https://example.com', method='HEAD')
+with urlopen(req, timeout=10) as r:
+    headers = {k.lower(): v for k, v in r.headers.items()}
+    missing = [h for h in SEC_HEADERS if h not in headers]
+    print('Missing:', missing)
+`,
+        links: [
+          { label: "Script", href: "scripts/http_headers_audit.py" }
+        ]
+      },
+      {
+        id: "log-bruteforce",
+        featured: 0,
+        type: "Script / outil",
+        domain: "Cybersécurité",
+        title: "Analyse de logs — détection de tentatives de brute-force",
+        cover: "../photo/3.jpg",
+        description: "Analyse de fichiers de logs (auth / applis) pour repérer des rafales d’échecs et générer un résumé par IP/utilisateur.",
+        tags: ["Logs", "Détection", "Python", "SIEM (notions)"],
+        details: [
+          "Regroupe les événements par IP et fenêtre de temps",
+          "Sortie CSV possible pour exploitation",
+          "Approche ‘défense’ : observation et corrélation"
+        ],
+        snippet: `# log_bruteforce_detector.py
+# Détection simple de rafales d’échecs (ex : SSH)
+
+import re
+from collections import Counter
+
+PAT = re.compile(r"Failed password.*from (?P<ip>\d+\.\d+\.\d+\.\d+)")
+counts = Counter()
+
+with open('auth.log', 'r', errors='ignore') as f:
+    for line in f:
+        m = PAT.search(line)
+        if m:
+            counts[m.group('ip')] += 1
+
+for ip, n in counts.most_common(10):
+    print(ip, n)
+`,
+        links: [
+          { label: "Script", href: "scripts/log_bruteforce_detector.py" }
+        ]
+      },
+      {
+        id: "burp-notes",
+        featured: 0,
+        type: "Notes / write‑up",
+        domain: "Cybersécurité",
+        title: "Web Security Academy (SQLi) — notes (sans payloads)",
+        cover: "../photo/2.jpg",
+        description: "Synthèse personnelle : risques SQLi, bonnes pratiques, et points de contrôle lors d’un test (cadre lab).",
+        tags: ["Burp Suite", "SQLi", "Remédiation"],
+        details: [
+          "Rappels OWASP Top 10 et mécanismes SQLi",
+          "Checklist de remédiation (paramétrage, droits, erreurs)",
+          "Sans payloads ni étapes d’exploitation"
+        ],
+        snippet: `# notes_portswigger_sqli.md
+- Comprendre la surface d’attaque (entrées utilisateur, endpoints)
+- Remédiation : requêtes paramétrées, moindres privilèges, gestion des erreurs
+- Vérification : tests de non‑régression
+`,
+        links: [
+          { label: "Notes", href: "scripts/notes_portswigger_sqli.md" },
+          { label: "Référence PortSwigger", href: "https://portswigger.net/web-security/sql-injection" }
+        ]
+      },
+      {
+        id: "telecom-budget",
+        featured: 0,
+        type: "Script / outil",
+        domain: "Télécommunications",
+        title: "Calculateur budget de liaison — atténuation & marge",
+        cover: "../images/telecom.svg",
+        description: "Petit script de calcul (pertes, gains, marge) pour documenter un lien (cuivre/fibre/radio) en TP.",
+        tags: ["Transmission", "Budget", "Python"],
+        details: [
+          "Entrées : puissance émission, gains, pertes, sensibilité",
+          "Sortie : puissance reçue + marge",
+          "Utile pour vérifier des hypothèses de TP"
+        ],
+        snippet: `# link_budget_calc.py
+# Budget de liaison simplifié
+
+ptx_dbm = 0.0
+gain_db = 6.0
+loss_db = 12.0
+rx_sens_dbm = -80.0
+
+prx_dbm = ptx_dbm + gain_db - loss_db
+margin_db = prx_dbm - rx_sens_dbm
+print('Prx(dBm)=', prx_dbm, 'Margin(dB)=', margin_db)
+`,
+        links: [
+          { label: "Script", href: "scripts/link_budget_calc.py" }
+        ]
+      },
+      {
+        id: "dev-clean-input",
+        featured: 0,
+        type: "Lab",
+        domain: "Développement & données",
+        title: "Validation d’entrées — règles & tests (exemples)",
+        cover: "../images/js.png",
+        description: "Mini‑lab : règles de validation, normalisation et tests (but : réduire les erreurs et les vulnérabilités côté web).",
+        tags: ["Validation", "Tests", "Web"],
+        details: [
+          "Normaliser et valider côté serveur",
+          "Messages d’erreur non bavards",
+          "Tests : entrées limites et formats invalides"
+        ],
+        snippet: `// Exemple (JS) : validation simple
+function isEmail(s){
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s).trim());
+}
+`,
+        links: []
+      }
+    ];
+
+    const grid = document.getElementById('projectsGrid');
+    const resultsCount = document.getElementById('resultsCount');
+    const typeSelect = document.getElementById('typeSelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
+
+    let currentDomain = 'all';
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function render(list) {
+      grid.innerHTML = '';
+      for (const p of list) {
+        const art = document.createElement('article');
+        art.className = 'card';
+        art.dataset.domain = p.domain;
+        art.dataset.type = p.type;
+        art.dataset.title = p.title;
+
+        const tagsHtml = (p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+        const detailsHtml = (p.details && p.details.length)
+          ? `<details class="card-details">
+              <summary>Détails</summary>
+              <ul>${p.details.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>
+              ${p.snippet ? `<pre class="code-block"><code>${escapeHtml(p.snippet)}</code></pre>` : ''}
+            </details>`
+          : '';
+
+        const linksHtml = (p.links && p.links.length)
+          ? `<div class="card-links">${p.links.map(l => `<a class="card-link" href="${l.href}" ${l.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>${escapeHtml(l.label)}</a>`).join('')}</div>`
+          : '';
+
+        art.innerHTML = `
+          <a class="card-cover" href="${p.cover}" target="_blank" rel="noopener noreferrer">
+            <img src="${p.cover}" alt="Couverture — ${escapeHtml(p.title)}" />
+            <div class="card-meta">
+              <span class="badge">${escapeHtml(p.type)}</span>
+              <span class="domain">${escapeHtml(p.domain)}</span>
+            </div>
+          </a>
+          <div class="card-body">
+            <h3 class="card-title">${escapeHtml(p.title)}</h3>
+            <p class="card-desc">${escapeHtml(p.description)}</p>
+            <div class="tags">${tagsHtml}</div>
+            ${linksHtml}
+            ${detailsHtml}
+          </div>
+        `;
+
+        grid.appendChild(art);
+      }
+    }
+
+    function applyFilters() {
+      const t = typeSelect.value;
+      const q = searchInput.value.trim().toLowerCase();
+
+      let list = projects.filter(p => {
+        const okDomain = currentDomain === 'all' || p.domain === currentDomain;
+        const okType = t === 'all' || p.type === t;
+        const blob = `${p.title} ${p.description} ${(p.tags || []).join(' ')}`.toLowerCase();
+        const okQuery = !q || blob.includes(q);
+        return okDomain && okType && okQuery;
+      });
+
+      const sort = sortSelect.value;
+      if (sort === 'featured') {
+        list = list.slice().sort((a, b) => (b.featured || 0) - (a.featured || 0));
+      } else if (sort === 'az') {
+        list = list.slice().sort((a, b) => a.title.localeCompare(b.title, 'fr'));
+      } else if (sort === 'domain') {
+        list = list.slice().sort((a, b) => a.domain.localeCompare(b.domain, 'fr'));
+      } else if (sort === 'type') {
+        list = list.slice().sort((a, b) => a.type.localeCompare(b.type, 'fr'));
+      }
+
+      resultsCount.textContent = `${list.length} projet(s) affiché(s)`;
+      render(list);
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDomain = btn.dataset.domain;
+        applyFilters();
+      });
+    });
+
+    typeSelect.addEventListener('change', applyFilters);
+    sortSelect.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+
+    applyFilters();
+  </script>
+</body>
+</html>
